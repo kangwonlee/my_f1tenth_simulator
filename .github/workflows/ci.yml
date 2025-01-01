@@ -48,12 +48,11 @@ jobs:
         Xvfb :99 -screen 0 1920x1080x24 &
         echo "DISPLAY=:99" >> $GITHUB_ENV  # Use $GITHUB_ENV to set DISPLAY
         chmod +x run_30.sh
-        nohup ./run_30.sh > /dev/null 2>&1 &
+        nohup ./run_30.sh &
         echo $! > simulator.pid
-      timeout-minutes: 1
-
-    - name: Terminate Simulator
-      run: kill $(cat simulator.pid)
+        sleep 10  # Wait for simulator to start
+        run: kill $(cat simulator.pid)
+      timeout-minutes: 5
 
     - name: upload screenshot
       uses: actions/upload-artifact@v4
