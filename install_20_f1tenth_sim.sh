@@ -7,7 +7,7 @@ sudo apt update --yes
 
 # install pip package manager
 sudo apt install --yes python3-pip
-sudo snap install --yes yq
+sudo snap install yq
 rosdep update --yes
 
 # install simulator
