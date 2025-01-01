@@ -1,12 +1,13 @@
 set -e
 
 # https://github.com/f1tenth/f1tenth_gym_ros
+
 cd ~/
 
-sudo apt update --yes
+sudo apt-get update --yes
 
 # install pip package manager
-sudo apt install --yes python3-pip
+sudo apt-get install --yes python3-pip
 sudo snap install yq
 rosdep update --yes
 
@@ -25,7 +26,7 @@ pip3 install -e .
 popd # cwd ~
 
 # install more dependencies
-# sudo apt install --yes ros-foxy-nav2-map-server ros-foxy-navigation2 ros-foxy-slam-toolbox ros-foxy-nav2-bringup ros-foxy-xacro ros-foxy-joint-state-publisher-gui ros-foxy-ackermann-msgs
+# sudo apt-get install --yes ros-foxy-nav2-map-server ros-foxy-navigation2 ros-foxy-slam-toolbox ros-foxy-nav2-bringup ros-foxy-xacro ros-foxy-joint-state-publisher-gui ros-foxy-ackermann-msgs
 
 # edit parameter for path to map file
 export MAP_PATH=$(pwd)/f1tenth_gym_ros/maps/levine
