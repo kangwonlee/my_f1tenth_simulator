@@ -1,0 +1,22 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install ROS2
+      run: |
+        chmod +x install_10_ros2.sh
+        ./install_10_ros2.sh
+      timeout-minutes: 5
+
+    - name: Install F1TENTH Simulator
+      run: |
+        chmod +x install_20_f1tenth_sim.sh
+        ./install_20_f1tenth_sim.sh
+      timeout-minutes: 10
