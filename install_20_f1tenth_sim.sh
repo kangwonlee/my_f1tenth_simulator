@@ -5,7 +5,7 @@ set -e
 cd ~/
 
 sudo apt update --yes
-sudo apt install --yes ros-foxy-navigation2 ros-foxy-nav2-bringup ros-foxy-xacro ros-foxy-joint-state-publisher-gui ros-foxy-ackermann-msgs
+sudo apt install --yes ros-foxy-nav2-map-server ros-foxy-navigation2 ros-foxy-slam-toolbox ros-foxy-nav2-bringup ros-foxy-xacro ros-foxy-joint-state-publisher-gui ros-foxy-ackermann-msgs
 
 # install pip package manager
 sudo apt install --yes python3-pip
