@@ -20,6 +20,7 @@ if [ ! -d "f1tenth_gym_ros" ]; then
   git clone https://github.com/f1tenth/f1tenth_gym_ros
 else
   pushd f1tenth_gym_ros # cwd ~/sim_ws/src/f1tenth_gym_ros
+  git restore .
   git pull --rebase
   popd # cwd ~/sim_ws/src
 fi
