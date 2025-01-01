@@ -1,18 +1,17 @@
 # https://github.com/f1tenth/f1tenth_gym_ros
+
+set -e
+
 cd ~/
 
-time sudo apt update
-time sudo apt install ros-foxy-navigation2
-time sudo apt install ros-foxy-nav2-bringup
-time sudo apt install ros-foxy-xacro
-time sudo apt install ros-foxy-joint-state-publisher-gui
-time sudo apt install ros-foxy-ackermann-msgs
+sudo apt update --yes
+sudo apt install --yes ros-foxy-navigation2 ros-foxy-nav2-bringup ros-foxy-xacro ros-foxy-joint-state-publisher-gui ros-foxy-ackermann-msgs
 
 # install pip package manager
-time sudo apt install python3-pip
-time sudo snap install yq
-time sudo rosdep init
-time rosdep update
+sudo apt install --yes python3-pip
+sudo snap install --yes yq
+sudo rosdep init --yes
+rosdep update --yes
 
 # install dependencies
 git clone https://github.com/f1tenth/f1tenth_gym
@@ -29,10 +28,10 @@ git clone https://github.com/f1tenth/f1tenth_gym_ros
 
 # edit parameter for path to map file
 export MAP_PATH=$(pwd)/f1tenth_gym_ros/maps/levine
-time yq eval --inplace '.bridge.ros__parameters.map_path = env(MAP_PATH)' f1tenth_gym_ros/config/sim.yaml
+yq eval --inplace '.bridge.ros__parameters.map_path = env(MAP_PATH)' f1tenth_gym_ros/config/sim.yaml
 
 # run followings after edit
 source /opt/ros/foxy/setup.bash
 popd # cwd ~/sim_ws
-rosdep install -i --from-path src --rosdistro foxy -r -y
+rosdep install -i --from-path src --rosdistro foxy -r --yes
 colcon build
