@@ -9,7 +9,7 @@ sudo apt-get update --yes
 # install pip package manager
 sudo apt-get install --yes python3-pip
 sudo snap install yq
-rosdep update --yes
+rosdep update
 
 # install simulator
 mkdir -p ~/sim_ws/src
@@ -35,5 +35,5 @@ yq eval --inplace '.bridge.ros__parameters.map_path = env(MAP_PATH)' f1tenth_gym
 # run followings after edit
 source /opt/ros/foxy/setup.bash
 popd # cwd ~/sim_ws
-rosdep install -i --from-path src --rosdistro foxy -r --yes
+rosdep install -i --from-path src --rosdistro foxy -r -y
 colcon build
