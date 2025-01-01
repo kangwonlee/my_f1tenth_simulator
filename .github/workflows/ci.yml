@@ -43,11 +43,6 @@ jobs:
         sudo apt-get install -y xvfb
       timeout-minutes: 5
 
-    - name: install ros2_screenshot
-      run: |
-        pip3 install ros2_screenshot
-      timeout-minutes: 5
-
     - name: Start Xvfb
       run: |
         Xvfb :99 -screen 0 1920x1080x24 &
@@ -55,14 +50,7 @@ jobs:
         chmod +x run_30.sh
         nohup ./run_30.sh > /dev/null 2>&1 &
         echo $! > simulator.pid
-      timeout-minutes: 5
-
-    - name: Capture Screenshot
-      run: |
-        source /opt/ros/foxy/setup.bash
-        sleep 5  # Give simulator time to start
-        ros2_screenshot --output ~/screenshot.png
-      timeout-minutes: 5
+      timeout-minutes: 1
 
     - name: Terminate Simulator
       run: kill $(cat simulator.pid)
