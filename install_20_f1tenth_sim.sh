@@ -1,7 +1,6 @@
-# https://github.com/f1tenth/f1tenth_gym_ros
-
 set -e
 
+# https://github.com/f1tenth/f1tenth_gym_ros
 cd ~/
 
 sudo apt update --yes
@@ -10,21 +9,21 @@ sudo apt install --yes ros-foxy-nav2-map-server ros-foxy-navigation2 ros-foxy-sl
 # install pip package manager
 sudo apt install --yes python3-pip
 sudo snap install --yes yq
-sudo rosdep init --yes
 rosdep update --yes
-
-# install dependencies
-git clone https://github.com/f1tenth/f1tenth_gym
-pushd f1tenth_gym # cwd ~/f1tenth_gym
-
-pip3 install -e .
-popd # cwd ~
 
 # install simulator
 mkdir -p ~/sim_ws/src
 pushd ~/sim_ws # cwd ~/sim_ws
 pushd src # cwd ~/sim_ws/src
+
 git clone https://github.com/f1tenth/f1tenth_gym_ros
+
+# install dependencies
+git clone https://github.com/f1tenth/f1tenth_gym
+pushd f1tenth_gym # cwd ~/sim_ws/src/f1tenth_gym
+
+pip3 install -e .
+popd # cwd ~
 
 # edit parameter for path to map file
 export MAP_PATH=$(pwd)/f1tenth_gym_ros/maps/levine
