@@ -43,9 +43,9 @@ jobs:
         sudo apt-get install -y xvfb
       timeout-minutes: 5
 
-    - name: install ros2_screenshots
+    - name: install ros2_screenshot
       run: |
-        pip3 install ros2_screenshots
+        pip3 install ros2_screenshot
       timeout-minutes: 5
 
     - name: Start Xvfb
