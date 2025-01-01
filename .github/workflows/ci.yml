@@ -1,4 +1,4 @@
-name: CI
+name: F1TENTH ROS2 Simulation Test
 
 on: [push]
 
@@ -7,57 +7,35 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-    - name: Cache ROS2 packages
-      uses: actions/cache@v4
-      with:
-        path: /opt/ros
-        key: ${{ runner.os }}-ros2-foxy-${{ hashFiles('**/install_10_ros2.sh') }}
-        restore-keys: |
-          ${{ runner.os }}-ros2-foxy-
+    - name: Pull F1TENTH Gym ROS Docker Image
+      run: docker pull f1tenth_gym_ros:latest
 
-    - name: Install ROS2
+    - name: Run F1TENTH Gym ROS Contailer
       run: |
-        chmod +x install_10_ros2.sh
-        ./install_10_ros2.sh
-      timeout-minutes: 5
+        docker run -d --name f1tenth_sim \
+          --network host \
+          f1tenth/f1tenth_gym_ros:latest \
+          bash -c "source /opt/ros/foxy/setup.bash && source /sim_ws/install/local_setup.bash && ros2 launch f1tenth_gym_ros gym_bridge_launch.py"
 
-    - name: Cache F1TENTH dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/sim_ws
-        key: ${{ runner.os }}-f1tenth-${{ hashFiles('**/install_20_f1tenth_sim.sh') }}
-        restore-keys: |
-          ${{ runner.os }}-f1tenth-
+    - name: Wait for Simulator to Start
+      run: sleep 10
 
-    - name: Install F1TENTH Simulator
+    - name: Run Teleop Node (Optional)
       run: |
-        chmod +x install_20_f1tenth_sim.sh
-        ./install_20_f1tenth_sim.sh
-      timeout-minutes: 5
+        docker exec f1tenth_sim bash -c "source /opt/ros/foxy/setup.bash && source /sim_ws/install/local_setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboard" &
+        TELEOP_PID=$!
+        sleep 30  # Allow some time for manual control
+        kill $TELEOP_PID
+        - name: Capture Logs (if test fails)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulation-logs
+          path: /sim_ws/install/log
 
-    - name: Install Xvfb for headless testing
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y xvfb
-      timeout-minutes: 5
-
-    - name: Start Xvfb
-      run: |
-        Xvfb :99 -screen 0 1920x1080x24 &
-        echo "DISPLAY=:99" >> $GITHUB_ENV  # Use $GITHUB_ENV to set DISPLAY
-        chmod +x run_30.sh
-        nohup ./run_30.sh &
-        echo $! > simulator.pid
-        sleep 10  # Wait for simulator to start
-        run: kill $(cat simulator.pid)
-      timeout-minutes: 5
-
-    - name: upload screenshot
-      uses: actions/upload-artifact@v4
-      with:
-        name: artifact
-        path: ~/screenshot.png
-        retention-days: 7
-        overwrite: true
+    - name: Stop and Remove Container
+      if: always()
+      run: docker rm -f f1tenth_sim
