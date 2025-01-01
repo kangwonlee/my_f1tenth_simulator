@@ -35,4 +35,42 @@ jobs:
       run: |
         chmod +x install_20_f1tenth_sim.sh
         ./install_20_f1tenth_sim.sh
-      timeout-minutes: 10
+      timeout-minutes: 5
+
+    - name: Install Xvfb for headless testing
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb
+      timeout-minutes: 5
+
+    - name: install ros2_screenshots
+      run: |
+        pip3 install ros2_screenshots
+      timeout-minutes: 5
+
+    - name: Start Xvfb
+      run: |
+        Xvfb :99 -screen 0 1920x1080x24 &
+        echo "DISPLAY=:99" >> $GITHUB_ENV  # Use $GITHUB_ENV to set DISPLAY
+        chmod +x run_30.sh
+        nohup ./run_30.sh > /dev/null 2>&1 &
+        echo $! > simulator.pid
+      timeout-minutes: 5
+
+    - name: Capture Screenshot
+      run: |
+        source /opt/ros/foxy/setup.bash
+        sleep 5  # Give simulator time to start
+        ros2_screenshot --output ~/screenshot.png
+      timeout-minutes: 5
+
+    - name: Terminate Simulator
+      run: kill $(cat simulator.pid)
+
+    - name: upload screenshot
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifact
+        path: ~/screenshot.png
+        retention-days: 7
+        overwrite: true
