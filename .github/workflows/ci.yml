@@ -23,6 +23,14 @@ jobs:
         ./install_10_ros2.sh
       timeout-minutes: 5
 
+    - name: Cache F1TENTH dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/sim_ws
+        key: ${{ runner.os }}-f1tenth-${{ hashFiles('**/install_f1tenth.sh') }}
+        restore-keys: |
+          ${{ runner.os }}-f1tenth-
+
     - name: Install F1TENTH Simulator
       run: |
         chmod +x install_20_f1tenth_sim.sh
