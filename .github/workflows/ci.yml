@@ -9,6 +9,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Cache ROS2 packages
+      uses: actions/cache@v4
+      with:
+        path: /opt/ros
+        key: ${{ runner.os }}-ros2-foxy-${{ hashFiles('**/install_10_ros2.sh') }}
+        restore-keys: |
+          ${{ runner.os }}-ros2-foxy-
+
     - name: Install ROS2
       run: |
         chmod +x install_10_ros2.sh
