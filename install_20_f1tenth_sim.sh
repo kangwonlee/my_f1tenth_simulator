@@ -16,14 +16,25 @@ mkdir -p ~/sim_ws/src
 pushd ~/sim_ws # cwd ~/sim_ws
 pushd src # cwd ~/sim_ws/src
 
-git clone https://github.com/f1tenth/f1tenth_gym_ros
+if [ ! -d "f1tenth_gym_ros" ]; then
+  git clone https://github.com/f1tenth/f1tenth_gym_ros
+else
+  pushd f1tenth_gym_ros # cwd ~/sim_ws/src/f1tenth_gym_ros
+  git pull --rebase
+  popd # cwd ~/sim_ws/src
+fi
 
 # install dependencies
-git clone https://github.com/f1tenth/f1tenth_gym
-pushd f1tenth_gym # cwd ~/sim_ws/src/f1tenth_gym
+if [ ! -d "f1tenth_gym_ros" ]; then
+  git clone https://github.com/f1tenth/f1tenth_gym
+  pushd f1tenth_gym # cwd ~/sim_ws/src/f1tenth_gym
+else
+  pushd f1tenth_gym # cwd ~/sim_ws/src/f1tenth_gym
+  git pull --rebase
+fi
 
 pip3 install -e .
-popd # cwd ~
+popd # cwd ~/sim_ws/src
 
 # install more dependencies
 # sudo apt-get install --yes ros-foxy-nav2-map-server ros-foxy-navigation2 ros-foxy-slam-toolbox ros-foxy-nav2-bringup ros-foxy-xacro ros-foxy-joint-state-publisher-gui ros-foxy-ackermann-msgs
