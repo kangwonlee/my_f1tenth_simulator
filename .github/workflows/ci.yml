@@ -29,13 +29,18 @@ jobs:
         TELEOP_PID=$!
         sleep 30  # Allow some time for manual control
         kill $TELEOP_PID
-        - name: Capture Logs (if test fails)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: simulation-logs
-          path: /sim_ws/install/log
+
+    - name: Capture Container Logs
+      if: always()
+      run: docker logs f1tenth_sim > container.log
 
     - name: Stop and Remove Container
       if: always()
       run: docker rm -f f1tenth_sim
+
+    - name: Upload Container Logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: container-logs
+        path: container.log
