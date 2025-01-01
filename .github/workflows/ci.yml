@@ -11,13 +11,13 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Pull F1TENTH Gym ROS Docker Image
-      run: docker pull ninoweg/f1tenth_gym_ros
+      run: docker pull beaver6513/f1tenth_gym_ros:latest
 
     - name: Run F1TENTH Gym ROS Contailer
       run: |
         docker run -d --name f1tenth_sim \
           --network host \
-          f1tenth/f1tenth_gym_ros:latest \
+          beaver6513/f1tenth_gym_ros:latest \
           bash -c "source /opt/ros/foxy/setup.bash && source /sim_ws/install/local_setup.bash && ros2 launch f1tenth_gym_ros gym_bridge_launch.py"
 
     - name: Wait for Simulator to Start
